@@ -275,26 +275,23 @@ require('lazy').setup({
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     config = function() -- This is the function that runs, AFTER loading
-      require('which-key')
-        .setup()
-        -- Document existing key chains
-        {
-          { '<leader>c', group = '[C]ode' },
-          { '<leader>c_', hidden = true },
-          { '<leader>d', group = '[D]ocument' },
-          { '<leader>d_', hidden = true },
-          { '<leader>h', group = 'Git [H]unk' },
-          { '<leader>h_', hidden = true },
-          { '<leader>r', group = '[R]ename' },
-          { '<leader>r_', hidden = true },
-          { '<leader>s', group = '[S]earch' },
-          { '<leader>s_', hidden = true },
-          { '<leader>t', group = '[T]oggle' },
-          { '<leader>t_', hidden = true },
-          { '<leader>w', group = '[W]orkspace' },
-          { '<leader>w_', hidden = true },
-          { '<leader>h', desc = 'Git [H]unk', mode = 'v' },
-        }
+      require('which-key').setup {
+        { '<leader>c', group = '[C]ode' },
+        { '<leader>c_', hidden = true },
+        { '<leader>d', group = '[D]ocument' },
+        { '<leader>d_', hidden = true },
+        { '<leader>h', group = 'Git [H]unk' },
+        { '<leader>h_', hidden = true },
+        { '<leader>r', group = '[R]ename' },
+        { '<leader>r_', hidden = true },
+        { '<leader>s', group = '[S]earch' },
+        { '<leader>s_', hidden = true },
+        { '<leader>t', group = '[T]oggle' },
+        { '<leader>t_', hidden = true },
+        { '<leader>w', group = '[W]orkspace' },
+        { '<leader>w_', hidden = true },
+        { '<leader>h', desc = 'Git [H]unk', mode = 'v' },
+      }
     end,
   },
 
@@ -804,7 +801,7 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'catppuccin-frappe'
+      vim.cmd.colorscheme 'catppuccin-mocha'
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
@@ -894,7 +891,7 @@ require('lazy').setup({
   -- require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.autopairs',
   -- require 'kickstart.plugins.neo-tree',
   require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
