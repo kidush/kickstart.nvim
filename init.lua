@@ -6,7 +6,7 @@
 ========                                    .-----.          ========
 ========         .----------------------.   | === |          ========
 ========         |.-""""""""""""""""""-.|   |-----|          ========
-========         ||                    ||   | === |          ========
+========         ||                    ||   | === |          ======== 
 ========         ||   KICKSTART.NVIM   ||   |-----|          ========
 ========         ||                    ||   | === |          ========
 ========         ||                    ||   |-----|          ========
@@ -275,26 +275,23 @@ require('lazy').setup({
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     config = function() -- This is the function that runs, AFTER loading
-      require('which-key')
-        .setup()
-        -- Document existing key chains
-        {
-          { '<leader>c', group = '[C]ode' },
-          { '<leader>c_', hidden = true },
-          { '<leader>d', group = '[D]ocument' },
-          { '<leader>d_', hidden = true },
-          { '<leader>h', group = 'Git [H]unk' },
-          { '<leader>h_', hidden = true },
-          { '<leader>r', group = '[R]ename' },
-          { '<leader>r_', hidden = true },
-          { '<leader>s', group = '[S]earch' },
-          { '<leader>s_', hidden = true },
-          { '<leader>t', group = '[T]oggle' },
-          { '<leader>t_', hidden = true },
-          { '<leader>w', group = '[W]orkspace' },
-          { '<leader>w_', hidden = true },
-          { '<leader>h', desc = 'Git [H]unk', mode = 'v' },
-        }
+      require('which-key').setup {
+        { '<leader>c', group = '[C]ode' },
+        { '<leader>c_', hidden = true },
+        { '<leader>d', group = '[D]ocument' },
+        { '<leader>d_', hidden = true },
+        { '<leader>h', group = 'Git [H]unk' },
+        { '<leader>h_', hidden = true },
+        { '<leader>r', group = '[R]ename' },
+        { '<leader>r_', hidden = true },
+        { '<leader>s', group = '[S]earch' },
+        { '<leader>s_', hidden = true },
+        { '<leader>t', group = '[T]oggle' },
+        { '<leader>t_', hidden = true },
+        { '<leader>w', group = '[W]orkspace' },
+        { '<leader>w_', hidden = true },
+        { '<leader>h', desc = 'Git [H]unk', mode = 'v' },
+      }
     end,
   },
 
@@ -377,6 +374,9 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
       vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
+      vim.keymap.set('n', '<leader>sF', function()
+        builtin.find_files { hidden = true }
+      end, { desc = '[S]earch [F]iles with Hidden' })
       vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
       vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
       vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
@@ -576,6 +576,7 @@ require('lazy').setup({
       --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+      local lspconfig = require 'lspconfig'
       local servers = {
         -- clangd = {},
         gopls = {},
@@ -589,6 +590,7 @@ require('lazy').setup({
         -- But for many setups, the LSP (`tsserver`) will work just fine
         -- tsserver = {},
         --
+        -- ruby_lsp = {},
         solargraph = {},
 
         lua_ls = {
@@ -602,6 +604,22 @@ require('lazy').setup({
               },
               -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
               -- diagnostics = { disable = { 'missing-fields' } },
+            },
+          },
+        },
+        denols = {
+          root_dir = lspconfig.util.root_pattern('deno.json', 'deno.jsonc'),
+        },
+
+        ts_ls = {
+          single_file_support = false,
+          root_dir = lspconfig.util.root_pattern 'package.json',
+          settings = {
+            typescript = {
+              format = {
+                indentSize = 2,
+                tabSize = 2,
+              },
             },
           },
         },
@@ -894,7 +912,7 @@ require('lazy').setup({
   -- require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.autopairs',
   -- require 'kickstart.plugins.neo-tree',
   require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 

@@ -4,6 +4,7 @@ return {
     formatters = {
       rufo = {
         command = 'rufo',
+        exit_codes = { 0, 3 },
       },
     },
     formatters_by_ft = {
