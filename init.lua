@@ -87,8 +87,8 @@ P.S. You can delete this when you're done too. It's your config now! :)
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
+vim.g.mapleader = '\\'
+vim.g.maplocalleader = '\\'
 
 -- Set to true if you have a Nerd Font installed
 vim.g.have_nerd_font = true
@@ -189,6 +189,55 @@ vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left wind
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+
+local function gh_command(args)
+  local command = { 'gh', unpack(args) }
+  local handle = io.popen(table.concat(command, ' '))
+  local result = ''
+  if handle ~= nil then
+    result = handle:read '*a'
+    handle:close()
+  end
+
+  print(result)
+end
+
+local function gh_get_completions(ArgLead, CmdLine, CursorPos)
+  local gh_commands = {
+    issue = { 'list', 'create', 'view', 'status', 'close' },
+    pr = { 'list', 'create', 'view', 'status', 'checkout', 'merge' },
+    repo = { 'list', 'create', 'view', 'clone', 'fork' },
+    gist = { 'list', 'create', 'edit', 'delete' },
+    auth = { 'login', 'logout', 'status', 'token', 'switch', 'setup-git' },
+    api = { 'get', 'post', 'put', 'delete' },
+    config = { 'get', 'set', 'list' },
+  }
+
+  -- Main command subcommands
+  local main_commands = {}
+  for cmd, _ in pairs(gh_commands) do
+    table.insert(main_commands, cmd)
+  end
+
+  local args = vim.split(CmdLine, ' ', { trimempty = true })
+  table.remove(args, 1)
+
+  if #args == 0 then
+    return main_commands
+  end
+
+  if #args == 1 and gh_commands[args[1]] then
+    return gh_commands[args[1]]
+  end
+
+  return {}
+end
+vim.api.nvim_create_user_command('Gh', function(opts)
+  gh_command(opts.fargs)
+end, {
+  nargs = '*',
+  complete = gh_get_completions,
+})
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -373,10 +422,11 @@ require('lazy').setup({
       local builtin = require 'telescope.builtin'
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
-      vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
-      vim.keymap.set('n', '<leader>sF', function()
+      vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = '[F]ind [F]iles' })
+      vim.keymap.set('n', '<leader>fg', builtin.find_files, { desc = '[F]ind [G]it' })
+      vim.keymap.set('n', '<leader>fF', function()
         builtin.find_files { hidden = true }
-      end, { desc = '[S]earch [F]iles with Hidden' })
+      end, { desc = '[F]ind [F]iles with Hidden' })
       vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
       vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
       vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
@@ -603,7 +653,7 @@ require('lazy').setup({
                 callSnippet = 'Replace',
               },
               -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-              -- diagnostics = { disable = { 'missing-fields' } },
+              diagnostics = { disable = { 'missing-fields' } },
             },
           },
         },
