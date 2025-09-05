@@ -585,8 +585,8 @@ require('lazy').setup({
         -- But for many setups, the LSP (`tsserver`) will work just fine
         -- tsserver = {},
         --
-        -- ruby_lsp = {},
-        solargraph = {},
+        ruby_lsp = {},
+        -- solargraph = {},
 
         lua_ls = {
           -- cmd = {...},
