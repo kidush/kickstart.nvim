@@ -8,6 +8,10 @@ vim.api.nvim_set_keymap('', '\\', '<Nop>', { noremap = true, silent = true })
 -- Set to true if you have a Nerd Font installed
 vim.g.have_nerd_font = true
 
+-- Set exrc (specific config for a project)
+vim.opt.exrc = true
+vim.opt.secure = true
+
 -- [[ Setting options ]]
 -- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
