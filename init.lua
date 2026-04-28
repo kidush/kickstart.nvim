@@ -1,21 +1,11 @@
--- Set <space> as the leader key
--- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 vim.api.nvim_set_keymap('', '\\', '<Nop>', { noremap = true, silent = true })
 
--- Set to true if you have a Nerd Font installed
-vim.g.have_nerd_font = true
-
--- Set exrc (specific config for a project)
+vim.g.have_nerd_font = true -- Set to true if you have a Nerd Font installed
 vim.opt.exrc = true
 vim.opt.secure = true
-
--- [[ Setting options ]]
--- See `:help vim.opt`
--- NOTE: You can change these options as you wish!
---  For more options, you can see `:help option-list`
 
 -- Make line numbers default
 vim.opt.number = true
@@ -590,7 +580,6 @@ require('lazy').setup({
         -- tsserver = {},
         --
         ruby_lsp = {},
-        -- solargraph = {},
 
         lua_ls = {
           -- cmd = {...},
@@ -661,7 +650,7 @@ require('lazy').setup({
     cmd = { 'ConformInfo' },
     keys = {
       {
-        '<leader>f',
+        '<leader>F',
         function()
           require('conform').format { async = true, lsp_fallback = true }
         end,
@@ -817,14 +806,16 @@ require('lazy').setup({
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
     -- 'folke/tokyonight.nvim',
-    'catppuccin/nvim',
-    name = 'catppuccin',
+    -- 'catppuccin/nvim',
+    -- name = 'catppuccin',
+    'rose-pine/neovim',
+    name = 'rose-pine',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     init = function()
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'catppuccin-frappe'
+      vim.cmd.colorscheme 'rose-pine-dawn'
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
